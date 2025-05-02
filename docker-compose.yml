@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: clink_postgres
+    environment:
+      POSTGRES_DB: back_office
+      POSTGRES_USER: pedream
+      POSTGRES_PASSWORD: 32357989
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: clink_app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/back_office
+      SPRING_DATASOURCE_USERNAME: pedream
+      SPRING_DATASOURCE_PASSWORD: 32357989
+    ports:
+      - "8080:8080"
+    restart: always
+
+volumes:
+  pgdata:
